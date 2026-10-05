@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bài 3: Phong trào Văn hoá Phục hưng và Cải cách tôn giáo - Lịch sử & Địa lí 7</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-hover: #4338ca;
+            --secondary: #06b6d4;
+            --accent: #f59e0b;
+            --success: #10b981;
+            --error: #ef4444;
+            --bg-gradient: linear-gradient(135deg, #f0fdf4 0%, #eff6ff 100%);
+            --card-bg: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Nunito', sans-serif;
+        }
+
+        body {
+            background: var(--bg-gradient);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 900px;
+            background: var(--card-bg);
+            border-radius: 24px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+            margin-top: 10px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Màn hình bắt đầu */
+        #start-screen {
+            padding: 50px 30px;
+            text-align: center;
+            background: linear-gradient(135deg, #e0e7ff 0%, #fae8ff 100%);
+        }
+
+        #start-screen h1 {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 15px;
+            font-weight: 900;
+        }
+
+        #start-screen p {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            margin-bottom: 30px;
+        }
+
+        .input-group {
+            margin-bottom: 25px;
+        }
+
+        .input-group input {
+            padding: 15px 25px;
+            font-size: 1.1rem;
+            border: 2px solid #cbd5e1;
+            border-radius: 50px;
+            width: 80%;
+            max-width: 400px;
+            outline: none;
+            transition: all 0.3s;
+            text-align: center;
+        }
+
+        .input-group input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.15);
+        }
+
+        /* Nút bấm chung */
+        .btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 14px 35px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+        }
+
+        .btn:hover {
+            background: var(--primary-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(79, 70, 229, 0.4);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        /* Thanh tiêu đề game & Tiến trình */
+        header {
+            background: var(--primary);
+            color: white;
+            padding: 20px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        header h2 {
+            font-size: 1.3rem;
+            font-weight: 800;
+        }
+
+        .user-info-badge {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 0.95rem;
+            font-weight: 600;
+        }
+
+        .progress-bar-container {
+            width: 100%;
+            height: 10px;
+            background: #e2e8f0;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: var(--secondary);
+            width: 0%;
+            transition: width 0.4s ease;
+        }
+
+        /* Khu vực nội dung bài học */
+        .content-section {
+            padding: 35px;
+            display: none;
+        }
+
+        .content-section.active {
+            display: block;
+            animation: fadeIn 0.4s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h3.section-title {
+            color: var(--primary);
+            font-size: 1.6rem;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        p.intro-text {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            color: var(--text-main);
+        }
+
+        /* Thẻ kiến thức dạng lưới */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .info-card {
+            background: #f8fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 16px;
+            padding: 20px;
+            transition: transform 0.2s, border-color 0.2s;
+        }
+
+        .info-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--primary);
+        }
+
+        .info-card h4 {
+            color: var(--primary);
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+        }
+
+        .info-card p {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        /* Khung tương tác câu hỏi */
+        .quiz-box {
+            background: #f1f5f9;
+            border-radius: 16px;
+            padding: 25px;
+            margin-top: 20px;
+        }
+
+        .quiz-box h4 {
+            font-size: 1.15rem;
+            margin-bottom: 15px;
+            color: #0f172a;
+        }
+
+        .options-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .option-btn {
+            background: white;
+            border: 2px solid #cbd5e1;
+            padding: 14px 20px;
+            border-radius: 12px;
+            font-size: 1rem;
+            text-align: left;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s;
+            color: var(--text-main);
+        }
+
+        .option-btn:hover {
+            border-color: var(--primary);
+            background: #eef2ff;
+        }
+
+        .option-btn.correct {
+            background: #d1fae5 !important;
+            border-color: var(--success) !important;
+            color: #065f46 !important;
+        }
+
+        .option-btn.incorrect {
+            background: #fee2e2 !important;
+            border-color: var(--error) !important;
+            color: #991b1b !important;
+        }
+
+        .feedback-msg {
+            margin-top: 15px;
+            font-weight: 700;
+            font-size: 1rem;
+            min-height: 24px;
+        }
+
+        /* Footer điều hướng giữa các màn */
+        .navigation-footer {
+            padding: 20px 35px;
+            background: #f8fafc;
+            border-top: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* Màn hình kết quả tổng kết */
+        #result-screen {
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .trophy-icon {
+            font-size: 4rem;
+            margin-bottom: 15px;
+        }
+
+        .badge-box {
+            display: inline-block;
+            background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+            color: white;
+            padding: 10px 25px;
+            border-radius: 30px;
+            font-weight: 800;
+            font-size: 1.2rem;
+            margin: 20px 0;
+            box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4);
+        }
+
+        .score-display {
+            font-size: 1.8rem;
+            font-weight: 900;
+            color: var(--primary);
+            margin-bottom: 20px;
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            body { padding: 10px; }
+            .content-section { padding: 20px; }
+            header { padding: 15px 20px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <!-- MÀN HÌNH BẮT ĐẦU -->
+    <div id="start-screen">
+        <h1>Khám Phá Lịch Sử Lớp 7</h1>
+        <p><b>Bài 3:</b> Phong trào Văn hoá Phục hưng và Cải cách tôn giáo[cite: 3]</p>
+        <div class="input-group">
+            <input type="text" id="student-name" placeholder="Nhập họ và tên của em..." autocomplete="off">
+        </div>
+        <button class="btn" onclick="startLearning()">Vào Bài Học Ngay 🚀</button>
+    </div>
+
+    <!-- KHUNG CHÍNH CỦA BÀI HỌC (Ẩn khi chưa bắt đầu) -->
+    <div id="main-learning-app" style="display: none;">
+        <header>
+            <h2 id="app-title">Bài 3: Văn hoá Phục hưng & Cải cách tôn giáo</h2>
+            <div class="user-info-badge" id="display-name">Học sinh: Khách</div>
+        </header>
+        <div class="progress-bar-container">
+            <div class="progress-bar" id="progress-bar"></div>
+        </div>
+
+        <!-- PHẦN 1: KHỞI ĐỘNG -->
+        <div class="content-section active" id="section-0">
+            <h3 class="section-title">🎯 1. Khởi động</h3>
+            <p class="intro-text">Em hãy quan sát bức bích hoạ trần nhà thờ Xích-xtin (Mi-ken-lăng-gô) và trả lời câu hỏi khởi động[cite: 3]:</p>
+            <div class="quiz-box">
+                <h4>Cuộc cách mạng văn hóa đầu thời cận đại này đề cao yếu tố nào dưới đây của con người?[cite: 3]</h4>
+                <div class="options-list">
+                    <button class="option-btn" onclick="checkStartQuiz(this, false)">A. Sự phục tùng tuyệt đối vào thần quyền phong kiến</button>
+                    <button class="option-btn" onclick="checkStartQuiz(this, true)">B. Đề cao giá trị con người và quyền tự do cá nhân, coi trọng khoa học - kĩ thuật[cite: 3]</button>
+                    <button class="option-btn" onclick="checkStartQuiz(this, false)">C. Sự tuyệt chủng của các loại hình nghệ thuật hội họa</button>
+                </div>
+                <div class="feedback-msg" id="start-feedback"></div>
+            </div>
+        </div>
+
+        <!-- PHẦN 2: BIẾN ĐỔI KINH TẾ - XÃ HỘI -->
+        <div class="content-section" id="section-1">
+            <h3 class="section-title">🌐 2. Những biến đổi kinh tế - xã hội Tây Âu từ thế kỉ XIII đến thế kỉ XVI</h3>
+            <p class="intro-text">Từ cuối thế kỉ XIII, kinh tế - xã hội Tây Âu có nhiều biến đổi quan trọng, tạo tiền đề cho phong trào Văn hoá Phục hưng[cite: 3]:</p>
+            <div class="cards-grid">
+                <div class="info-card">
+                    <h4>🏭 Kinh tế</h4>
+                    <p>Các công trường thủ công, công ty thương mại, các đồn điền ra đời và mở rộng quy mô[cite: 3].</p>
+                </div>
+                <div class="info-card">
+                    <h4>🤝 Quan hệ sản xuất</h4>
+                    <p>Quan hệ sản xuất tư bản chủ nghĩa chính thức xuất hiện, thay thế dần quan hệ phong kiến lỗi thời[cite: 3].</p>
+                </div>
+                <div class="info-card">
+                    <h4>👥 Xã hội</h4>
+                    <p>Giai cấp tư sản ra đời, có thế lực về kinh tế nhưng chưa có địa vị xã hội tương xứng, muốn xây dựng nền văn hoá mới[cite: 3].</p>
+                </div>
+            </div>
+            <div class="quiz-box">
+                <h4>Hoạt động nhỏ: Giai cấp tư sản Tây Âu có thái độ thế nào với giáo lí lỗi thời của phong kiến?[cite: 3]</h4>
+                <div class="options-list">
+                    <button class="option-btn" onclick="checkActivity1(this, true)">Đúng: Không chấp nhận, muốn xây dựng nền văn hoá mới đề cao con người[cite: 3]</button>
+                    <button class="option-btn" onclick="checkActivity1(this, false)">Sai: Hoàn toàn ủng hộ và duy trì hệ tư tưởng phong kiến cũ</button>
+                </div>
+                <div class="feedback-msg" id="act1-feedback"></div>
+            </div>
+        </div>
+
+        <!-- PHẦN 3: PHONG TRÀO VĂN HÓA PHỤC HƯNG -->
+        <div class="content-section" id="section-2">
+            <h3 class="section-title">🎨 3. Phong trào Văn hoá Phục hưng</h3>
+            <p class="intro-text">Bắt đầu từ I-ta-li-a (thế kỉ XIV), sau đó lan rộng ra khắp Tây Âu, đánh dấu bước phát triển rực rỡ của văn học, nghệ thuật và khoa học[cite: 3, 4].</p>
+            <div class="cards-grid">
+                <div class="info-card">
+                    <h4>✍️ Văn học & Nghệ thuật</h4>
+                    <p><b>M. Xéc-van-tét</b> (Đông Ki-hô-tê), <b>W. Sếch-xpia</b> (Rô-mê-o và Giu-li-ét), <b>Lê-ô-na đo Vanh-xi</b> (Nàng La Giô-công-đơ)[cite: 3, 4].</p>
+                </div>
+                <div class="info-card">
+                    <h4>🔭 Khoa học - Kĩ thuật</h4>
+                    <p><b>N. Cô-péc-ních</b> (thuyết Trái Đất quay xung quanh Mặt Trời), <b>G. Ga-li-lê</b> dũng cảm chống lại quan điểm sai lầm[cite: 4].</p>
+                </div>
+            </div>
+            <div class="quiz-box">
+                <h4>Ghép cặp danh nhân với tác phẩm tiêu biểu đúng:</h4>
+                <p style="font-size: 0.95rem; margin-bottom: 10px; color: var(--text-muted);">Ai là tác giả của kiệt tác hội họa "Nàng La Giô-công-đơ" (Mona Lisa)?[cite: 4]</p>
+                <div class="options-list">
+                    <button class="option-btn" onclick="checkActivity2(this, false)">A. M. Xéc-van-tét</button>
+                    <button class="option-btn" onclick="checkActivity2(this, true)">B. Lê-ô-na đo Vanh-xi[cite: 4]</button>
+                    <button class="option-btn" onclick="checkActivity2(this, false)">C. W. Sếch-xpia</button>
+                </div>
+                <div class="feedback-msg" id="act2-feedback"></div>
+            </div>
+        </div>
+
+        <!-- PHẦN 4: PHONG TRÀO CẢI CÁCH TÔN GIÁO -->
+        <div class="content-section" id="section-3">
+            <h3 class="section-title">⛪ 4. Phong trào Cải cách tôn giáo</h3>
+            <p class="intro-text">Thiên Chúa giáo trong thời trung đại chi phối toàn bộ đời sống tinh thần xã hội châu Âu, nhưng đến đầu thế kỉ XVI đã cản trở sự phát triển của giai cấp tư sản[cite: 4].</p>
+            <div class="cards-grid">
+                <div class="info-card">
+                    <h4>📍 Nguyên nhân bùng nổ</h4>
+                    <p>Giáo hội Thiên Chúa giáo suy đồi, bảo thủ, tìm cách kìm hãm sự phát triển của tư sản tại Đức, Thụy Sĩ[cite: 4].</p>
+                </div>
+                <div class="info-card">
+                    <h4>⚡ Chủ xướng tiêu biểu</h4>
+                    <p><b>Mác-tin Lu-thơ</b> (Đức) với bản luận văn chỉ trích giáo hội năm 1517 và <b>Giăng Can-vanh</b> (Thụy Sĩ)[cite: 4].</p>
+                </div>
+                <div class="info-card">
+                    <h4>🌿 Tác động xã hội</h4>
+                    <p>Thiên Chúa giáo phân hoá thành <b>Cựu giáo</b> và <b>Tân giáo</b>; làm bùng lên cuộc Chiến tranh nông dân Đức[cite: 5].</p>
+                </div>
+            </div>
+            <div class="quiz-box">
+                <h4>Hoạt động điền từ/nhận định: Đâu là ý nghĩa quan trọng của Văn hóa Phục hưng và Cải cách tôn giáo?[cite: 4, 5]</h4>
+                <div class="options-list">
+                    <button class="option-btn" onclick="checkActivity3(this, true)">Đúng: Mở đường cho nền văn hoá châu Âu phát triển cao hơn, chống lại chế độ phong kiến[cite: 4, 5]</button>
+                    <button class="option-btn" onclick="checkActivity3(this, false)">Sai: Làm cho xã hội châu Âu quay trở lại thời kỳ đồ đá</button>
+                </div>
+                <div class="feedback-msg" id="act3-feedback"></div>
+            </div>
+        </div>
+
+        <!-- PHẦN 5: GAME CHALLENGE CUỐI BÀI (5 CÂU HỎI TÍNH ĐIỂM) -->
+        <div class="content-section" id="section-4">
+            <h3 class="section-title">🏆 Thử Thách Game Challenge (5 Câu Hỏi)</h3>
+            <p class="intro-text" id="challenge-instruction">Hãy trả lời đúng các câu hỏi dưới đây để ghi điểm và nhận huy hiệu cao quý!</p>
+            
+            <div class="quiz-box" id="challenge-box">
+                <h4 id="question-title">Câu 1: Phong trào Văn hoá Phục hưng khởi phát đầu tiên ở quốc gia nào?[cite: 3]</h4>
+                <div class="options-list" id="challenge-options">
+                    <!-- Được sinh bằng JS -->
+                </div>
+                <div class="feedback-msg" id="challenge-feedback"></div>
+            </div>
+        </div>
+
+        <!-- PHẦN 6: KẾT QUẢ & TỔNG KẾT -->
+        <div class="content-section" id="result-screen">
+            <div class="trophy-icon">🏆</div>
+            <h3 style="font-size: 2rem; color: var(--primary); margin-bottom: 10px;">Chúc Mừng Em Đã Hoàn Thành!</h3>
+            <p id="final-student-congrats" style="font-size: 1.1rem; color: var(--text-muted); margin-bottom: 15px;"></p>
+            <div class="score-display" id="final-score-text">Điểm số: 0 / 5</div>
+            <div class="badge-box" id="badge-title">Huy hiệu: Nhà Sử Học Triển Vọng</div>
+            <p style="margin-bottom: 25px; color: var(--text-main);">Em đã nắm rất vững kiến thức về phong trào Văn hoá Phục hưng và Cải cách tôn giáo[cite: 3, 4, 5]!</p>
+            <button class="btn" onclick="restartGame()">Chơi Lại Từ Đầu 🔄</button>
+        </div>
+
+        <!-- THANH ĐIỀU HƯỚNG DƯỚI -->
+        <div class="navigation-footer" id="nav-footer">
+            <button class="btn" id="prev-btn" onclick="changeSection(-1)" style="background: #94a3b8; display: none;">Quay lại</button>
+            <span id="step-indicator" style="font-weight: 700; color: var(--text-muted);">Bước 1 / 6</span>
+            <button class="btn" id="next-btn" onclick="changeSection(1)">Tiếp theo ➡️</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    let currentSection = 0;
+    const totalSections = 6; // từ 0 đến 5 (0:Khởi động, 1,2,3: nội dung, 4: Challenge, 5: Kết quả)
+    let studentName = "";
+    let challengeScore = 0;
+    let currentChallengeQ = 0;
+
+    // Dữ liệu Game Challenge 5 câu hỏi bám sát SGK
+    const challengeQuestions = [
+        {
+            q: "Câu 1: Phong trào Văn hoá Phục hưng khởi phát lần đầu tiên ở quốc gia nào?",
+            options: [
+                { text: "A. Tây Ban Nha", correct: false },
+                { text: "B. I-ta-li-a", correct: true },
+                { text: "C. Đức", correct: false },
+                { text: "D. Anh", correct: false }
+            ],
+            source: "[cite: 3]"
+        },
+        {
+            q: "Câu 2: Ai là tác giả của kiệt tác văn học 'Đông Ki-hô-tê'?",
+            options: [
+                { text: "A. M. Xéc-van-tét", correct: true },
+                { text: "B. W. Sếch-xpia", correct: false },
+                { text: "C. Lê-ô-na đo Vanh-xi", correct: false },
+                { text: "D. Mác-tin Lu-thơ", correct: false }
+            ],
+            source: "[cite: 3]"
+        },
+        {
+            q: "Câu 3: Nhà bác học nào là tác giả của thuyết 'Trái Đất quay xung quanh Mặt Trời'?",
+            options: [
+                { text: "A. G. Ga-li-lê", correct: false },
+                { text: "B. N. Cô-péc-ních", correct: true },
+                { text: "C. Giăng Can-vanh", correct: false },
+                { text: "D. Mi-ken-lăng-gô", correct: false }
+            ],
+            source: "[cite: 4]"
+        },
+        {
+            q: "Câu 4: Vào năm 1517, nhân vật nào đã ghim lên cánh cửa nhà thờ bản luận văn chỉ trích giáo hội Thiên Chúa giáo?",
+            options: [
+                { text: "A. Mác-tin Lu-thơ", correct: true },
+                { text: "B. Giăng Can-vanh", correct: false },
+                { text: "C. W. Sếch-xpia", correct: false },
+                { text: "D. M. Xéc-van-tét", correct: false }
+            ],
+            source: "[cite: 4]"
+        },
+        {
+            q: "Câu 5: Tác động xã hội quan trọng của phong trào Cải cách tôn giáo đối với Thiên Chúa giáo là gì?",
+            options: [
+                { text: "A. Làm cho Thiên Chúa giáo sụp đổ hoàn toàn", correct: false },
+                { text: "B. Phân hoá Thiên Chúa giáo thành Cựu giáo và Tân giáo", correct: true },
+                { text: "C. Sáp nhập Thiên Chúa giáo với Phật giáo", correct: false },
+                { text: "D. Đưa giáo hoàng lên nắm toàn bộ quyền lực tối cao thế giới", correct: false }
+            ],
+            source: "[cite: 5]"
+        }
+    ];
+
+    function startLearning() {
+        const input = document.getElementById('student-name');
+        studentName = input.value.trim();
+        if(!studentName) {
+            alert('Em vui lòng nhập tên trước khi vào bài học nhé!');
+            input.focus();
+            return;
+        }
+        document.getElementById('display-name').innerText = `Học sinh: ${studentName}`;
+        document.getElementById('start-screen').style.display = 'none';
+        document.getElementById('main-learning-app').style.display = 'block';
+        updateView();
+    }
+
+    function updateView() {
+        // Ẩn tất cả section
+        for(let i=0; i<totalSections; i++) {
+            const sec = document.getElementById(`section-${i}`);
+            if(sec) sec.classList.remove('active');
+        }
+
+        // Hiện section hiện tại
+        const activeSec = document.getElementById(`section-${currentSection}`);
+        if(activeSec) activeSec.classList.add('active');
+
+        // Thanh tiến trình
+        const progressPercent = (currentSection / (totalSections - 1)) * 100;
+        document.getElementById('progress-bar').style.width = `${progressPercent}%`;
+        document.getElementById('step-indicator').innerText = `Bước ${currentSection + 1} / ${totalSections}`;
+
+        // Điều khiển nút bấm footer
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+
+        if(currentSection === 0) {
+            prevBtn.style.display = 'none';
+        } else {
+            prevBtn.style.display = 'inline-block';
+        }
+
+        if(currentSection === totalSections - 1) {
+            document.getElementById('nav-footer').style.display = 'none'; // Ẩn footer ở trang kết quả
+        } else {
+            document.getElementById('nav-footer').style.display = 'flex';
+            nextBtn.innerText = (currentSection === totalSections - 2) ? "Xem Kết Quả 🏆" : "Tiếp theo ➡️";
+        }
+
+        // Nếu chuyển đến phần Challenge (section 4), khởi tạo câu hỏi đầu tiên
+        if(currentSection === 4) {
+            currentChallengeQ = 0;
+            challengeScore = 0;
+            loadChallengeQuestion();
+        }
+    }
+
+    function changeSection(direction) {
+        currentSection += direction;
+        if(currentSection < 0) currentSection = 0;
+        if(currentSection >= totalSections) currentSection = totalSections - 1;
+        updateView();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // Feedback các phần hoạt động tương tác bài học
+    function checkStartQuiz(btn, isCorrect) {
+        const feedback = document.getElementById('start-feedback');
+        const parent = btn.parentElement;
+        Array.from(parent.children).forEach(b => b.style.pointerEvents = 'none');
+        if(isCorrect) {
+            btn.classList.add('correct');
+            feedback.innerHTML = "🎉 Chính xác tuyệt vời! Em đã nắm bắt đúng tinh thần của thời kỳ Phục hưng[cite: 3].";
+            feedback.style.color = "var(--success)";
+        } else {
+            btn.classList.add('incorrect');
+            feedback.innerHTML = "❌ Chưa chính xác. Gợi ý: Phong trào này tôn vinh con người và quyền tự do cá nhân[cite: 3].";
+            feedback.style.color = "var(--error)";
+        }
+    }
+
+    function checkActivity1(btn, isCorrect) {
+        const feedback = document.getElementById('act1-feedback');
+        const parent = btn.parentElement;
+        Array.from(parent.children).forEach(b => b.style.pointerEvents = 'none');
+        if(isCorrect) {
+            btn.classList.add('correct');
+            feedback.innerHTML = "🎉 Chính xác! Giai cấp tư sản không chấp nhận giáo lí lỗi thời và muốn xây dựng nền văn hoá mới[cite: 3].";
+            feedback.style.color = "var(--success)";
+        } else {
+            btn.classList.add('incorrect');
+            feedback.innerHTML = "❌ Chưa đúng. Em hãy xem lại mục biến đổi xã hội trong SGK nhé[cite: 3].";
+            feedback.style.color = "var(--error)";
+        }
+    }
+
+    function checkActivity2(btn, isCorrect) {
+        const feedback = document.getElementById('act2-feedback');
+        const parent = btn.parentElement;
+        Array.from(parent.children).forEach(b => b.style.pointerEvents = 'none');
+        if(isCorrect) {
+            btn.classList.add('correct');
+            feedback.innerHTML = "🌟 Đúng rồi! Lê-ô-na đo Vanh-xi là thiên tài với kiệt tác 'Nàng La Giô-công-đơ'[cite: 4].";
+            feedback.style.color = "var(--success)";
+        } else {
+            btn.classList.add('incorrect');
+            feedback.innerHTML = "❌ Sai mất rồi. Tác giả kiệt tác này là đại danh hoạ Lê-ô-na đo Vanh-xi[cite: 4].";
+            feedback.style.color = "var(--error)";
+        }
+    }
+
+    function checkActivity3(btn, isCorrect) {
+        const feedback = document.getElementById('act3-feedback');
+        const parent = btn.parentElement;
+        Array.from(parent.children).forEach(b => b.style.pointerEvents = 'none');
+        if(isCorrect) {
+            btn.classList.add('correct');
+            feedback.innerHTML = "🎉 Tuyệt vời! Phong trào mang ý nghĩa mở đường cho văn hoá châu Âu phát triển cao hơn[cite: 4, 5].";
+            feedback.style.color = "var(--success)";
+        } else {
+            btn.classList.add('incorrect');
+            feedback.innerHTML = "❌ Chưa chính xác. Em hãy nhớ lại vai trò phản đối chế độ phong kiến lỗi thời[cite: 4, 5].";
+            feedback.style.color = "var(--error)";
+        }
+    }
+
+    // Xử lý logic Game Challenge 5 câu
+    function loadChallengeQuestion() {
+        const qData = challengeQuestions[currentChallengeQ];
+        document.getElementById('question-title').innerText = `${qData.q} ${qData.source}`;
+        const optionsContainer = document.getElementById('challenge-options');
+        optionsContainer.innerHTML = '';
+        document.getElementById('challenge-feedback').innerHTML = '';
+
+        qData.options.forEach((opt) => {
+            const btn = document.createElement('button');
+            btn.className = 'option-btn';
+            btn.innerText = opt.text;
+            btn.onclick = () => selectChallengeAnswer(btn, opt.correct);
+            optionsContainer.appendChild(btn);
+        });
+    }
+
+    function selectChallengeAnswer(btn, isCorrect) {
+        const parent = document.getElementById('challenge-options');
+        Array.from(parent.children).forEach(b => b.style.pointerEvents = 'none');
+        const feedback = document.getElementById('challenge-feedback');
+
+        if(isCorrect) {
+            btn.classList.add('correct');
+            feedback.innerHTML = "✨ Chính xác! +1 điểm cho em.";
+            feedback.style.color = "var(--success)";
+            challengeScore++;
+        } else {
+            btn.classList.add('incorrect');
+            feedback.innerHTML = "❌ Đáp án chưa đúng!";
+            feedback.style.color = "var(--error)";
+        }
+
+        setTimeout(() => {
+            currentChallengeQ++;
+            if(currentChallengeQ < challengeQuestions.length) {
+                loadChallengeQuestion();
+            } else {
+                // Hoàn thành 5 câu, chuyển sang màn hình kết quả
+                currentSection = 5;
+                showFinalResults();
+            }
+        }, 1200);
+    }
+
+    function showFinalResults() {
+        updateView();
+        document.getElementById('final-student-congrats').innerText = `Học sinh: ${studentName}`;
+        document.getElementById('final-score-text').innerText = `Điểm số đạt được: ${challengeScore} / 5 câu`;
+        
+        const badgeBox = document.getElementById('badge-title');
+        if(challengeScore === 5) {
+            badgeBox.innerText = "🏆 Huy hiệu: Trạng Nguyên Lịch Sử (Xuất sắc tuyệt đối!)";
+        } else if(challengeScore >= 3) {
+            badgeBox.innerText = "🥈 Huy hiệu: Nhà Sử Học Triển Vọng";
+        } else {
+            badgeBox.innerText = "🥉 Huy hiệu: Thành Viên Chăm Chỉ (Cố gắng ôn tập thêm nhé!)";
+        }
+    }
+
+    function restartGame() {
+        currentSection = 0;
+        challengeScore = 0;
+        currentChallengeQ = 0;
+        document.getElementById('student-name').value = '';
+        document.getElementById('main-learning-app').style.display = 'none';
+        document.getElementById('start-screen').style.display = 'block';
+    }
+</script>
+
+</body>
+</html>
